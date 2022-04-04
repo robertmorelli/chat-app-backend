@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        chat
+    </title>
+    <script>
+        function getComments() {
+            var data_file = "GetComments.php?roomREF=" + btoa(document.getElementById("room").value).substring(0,20);
+            var http_request = new XMLHttpRequest();
+            try {
+                http_request = new XMLHttpRequest();
+            } catch (e) {
+                try {
+                    http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {
+                        alert("Your browser broke!");
+                        return false;
+                    }
+                }
+            }
+            http_request.onreadystatechange = function () {
+                if (http_request.readyState == 4) {
+                    var text = http_request.responseText.trim();
+                    //document.getElementById("comments").innerHTML = text;
+                    if(!text) {
+                        document.getElementById("comments").innerHTML = "";
+                        return;
+                    }
+                    let stuff = text.split(";").map(E => E.split(',').map(F => F.trim()));
+                    let str = "";
+                    stuff.forEach(E => {
+                        str += `<div><div>${atob(E[0])}</div><div>${atob(E[1])}</div></div>`;
+                    });
+                    str += "";
+
+                    document.getElementById("comments").innerHTML = str;
+
+                }
+            }
+            http_request.open("GET", data_file, true);
+            http_request.send();
+        }
+
+
+
+        function sendComment() {
+            var name = document.getElementById("name").value;
+            var room = document.getElementById("room").value;
+            var comment = document.getElementById("comment").value;
+            document.getElementById("comment").value = "";
+            var data_file = "SendComment.php?data=" + btoa(JSON.stringify({ "Name": name, "Comment": comment, "Room": room }));
+            var http_request = new XMLHttpRequest();
+            try {
+                http_request = new XMLHttpRequest();
+            } catch (e) {
+                try {
+                    http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {
+                        // Something went wrong
+                        alert("Your browser broke!");
+                        return false;
+                    }
+                }
+            }
+            http_request.onreadystatechange = function () {
+                if (http_request.readyState == 4) {
+                    var text = http_request.responseText.trim();
+                    if(text) console.log(text);
+                }
+            }
+            http_request.open("GET", data_file, true);
+            http_request.send();
+            getComments();
+        }
+        function load() {
+            getComments()
+            var intervalId = window.setInterval(function () {
+                try{
+                    getComments();
+                }
+                catch{}
+            }, 5000);
+        }
+    </script>
+    <style>
+        ::placeholder{
+            color: #ccc;
+        }
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            font-size: min( 4vh , 4vw);
+            
+        }
+        input{
+            
+            border: #333 solid 1px;
+            color: #333;
+            background-color: #eee;
+        }
+        input:focus{
+            border: white solid 1px;
+            background-color: #222;
+            color: white;
+        }
+
+        body {
+            padding-left: 10vw;
+            padding-right: 0vw;
+            padding-top: 5vh;
+            padding-bottom: 5vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 90vh;
+            width: 80vw;
+        }
+
+        header>div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 80vw;
+        }
+
+        footer {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 80vw;
+        }
+        article{
+            width: 80vw;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+        article>div{
+            width: 80vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+            padding-left: 1vw;
+            padding-right: 9vw;
+            padding-top: 5vh;
+            padding-bottom: 5vh;
+
+        }
+        article>div>div{
+            width: 70vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        article>div>div>div:nth-child(1){
+            display: inline;
+            width: 20vw;
+            font-style: italic;
+        }
+
+        article>div>div>div:nth-child(1)::after{
+            content: ":";
+        }
+        button{
+            color: white;
+            background-color: #222;
+            border-radius: 3px;
+        }
+
+        article>div>div>div:nth-child(2){
+            display: inline;
+            width: 50vw;
+            font-style: bold;
+            border: transparent;
+            border-bottom: #aaa;
+            border-width: 1px;
+            border-radius: 1px;
+            border-style: solid;
+        }
+    </style>
+</head>
+
+<body onload="load()">
+    <header>
+        <h1>Chat</h1>
+        <div>
+            <input type="text" id="name" placeholder="Your Name">
+            <input type="text" id="room" placeholder="Room Name" oninput="getComments()">
+        </div>
+
+    </header>
+    <article>
+        <div id="comments">
+
+        </div>
+    </article>
+    <footer>
+        <input type="text" id="comment" onsubmit="sendComment()" placeholder="Message to send...">
+        <button onclick="sendComment()">></button>
+    </footer>
+</body>
+
+</html>
