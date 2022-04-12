@@ -6,13 +6,9 @@
 //} else {
 require_once "DataBaseConnection.php";
 
-//Id of last comment 
-$comments = intval($_GET['lastID']);
-if(!$comments){
-    $comments = 0;
-}
+
 //make quert for
-$sql = "SELECT senderName,commentText,commentTime,commentID FROM `Comments` where commentID>$comments;";
+$sql = "SELECT Name FROM `Users` where `active`=1;";
 
 //WHERE `timestamp` >= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE
 $result = $con->query($sql);
@@ -26,6 +22,6 @@ $loc = false;
 while ($Array = $result->fetch_row()) {
     if ($loc) echo ";";
     else $loc = true;
-    echo $Array[0] . ',' . $Array[1] . ',' . $Array[2] . ',' . $Array[3];
+    echo $Array[0] . ',' . $Array[1] . ',' . $Array[2];
 }
 //}
