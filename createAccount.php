@@ -6,11 +6,11 @@ $rawdata = $_GET["data"];
 $jsondata = base64_decode($rawdata);
 $data = json_decode($jsondata, true);
 
-$username = $data['username'];
-$password = $data['password'];
-$avatar = $data['avatar'];
+$username = base64_encode($data['Name']);
+$password = $data['Password'];
+$avatar = $data['Avatar'];
 
-$sql = 'SELECT * FROM `Users` where Name="' + base64_encode($usename) + '";';
+$sql = "SELECT * FROM `Users` where Name=\"$usename\";";
 $result = $con->query($sql);
 if (!$result) {
     $message = "Whole query " . $sql;
@@ -22,6 +22,13 @@ if (!$result) {
         $Hashed = hash("ripemd128", $password);
         $sql='INSERT INTO `Users`( `Name`, `Password`, `avatar`,  `active`) VALUES ("'.$username.'","'.$Hashed.'",'.$avatar.',1)';
         $result = $con->query($sql);
+
+        if (!$result) {
+            echo "false";
+        }
+        else{
+            echo "true";
+        }
     }
     else{
         echo "false";

@@ -1,9 +1,17 @@
 <?php
 session_start();
 require_once "DataBaseConnection.php";
-$usernameraw = $_POST['username'];
-$username = base64_decode($usernameraw);
-$sql = 'SELECT * FROM `Users` where Name=' + base64_encode($usename) + ';';
+$rawdata = $_GET["data"];
+$jsondata = base64_decode($rawdata);
+$data = json_decode($jsondata, true);
+
+$username = base64_encode($data['Name']);
+$password = $data['Password'];
+
+echo $username;
+
+$Hashed = hash("ripemd128", $password);
+$sql = "SELECT * FROM `Users` where Name=\"$usename\" AND Password=\"$Hashed\";";
 $result = $con->query($sql);
 if (!$result) {
     $message = "Whole query " . $sql;
@@ -12,9 +20,10 @@ if (!$result) {
 } else {
     $count = $result->num_rows;
     if($count==1){
-        
+        echo "true";
     }
     else{
-        echo "false";
+        $message = "Whole query " . $sql;
+        echo $message;
     }
 }
