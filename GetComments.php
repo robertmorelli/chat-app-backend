@@ -20,4 +20,4 @@ if ($_SESSION['loggedIn'] == 1) {
             }
         } else echo "false";
     } else echo "false";
-}
+} else echo "false";

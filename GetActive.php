@@ -14,4 +14,4 @@ if ($_SESSION['loggedIn'] == 1) {
             echo $Array[0] . ',' . $Array[1];
         }
     } else echo "false";
-}
+} else echo "false";

@@ -6,11 +6,10 @@ if ($_SESSION['loggedIn'] == 1) {
     $data = json_decode($jsondata, true);
     $usernamenew = base64_encode($data['NameNew']);
 
-    $sql = "UPDATE `Users` SET `Name`=\"".$usernamenew."\" where Name=\"".$_SESSION['userName']."\"";
+    $sql = "UPDATE `Users` SET `Name`=\"" . $usernamenew . "\" where Name=\"" . $_SESSION['userName'] . "\"";
     $result = $con->query($sql);
-    if($result){
+    if ($result) {
         $_SESSION['userName'] = $usernamenew;
         echo "true";
-    }
-    else echo "false";
+    } else echo "false";
 } else echo "false";

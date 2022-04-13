@@ -7,8 +7,8 @@ if ($_SESSION['loggedIn'] == 1) {
     $usernamenew = base64_encode($data['NameNew']);
     $avatar = $data['Avatar'];
 
-    $sql = "UPDATE `Users` SET `avatar`=\"".$avatar."\" where Name=\"".$_SESSION['userName']."\"";
+    $sql = "UPDATE `Users` SET `avatar`=\"" . $avatar . "\" where Name=\"" . $_SESSION['userName'] . "\"";
     $result = $con->query($sql);
-    if($result) echo "true";
+    if ($result) echo "true";
     else echo "false";
 } else echo "false";
