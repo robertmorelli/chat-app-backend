@@ -1,31 +1,23 @@
-
 <?php
-//session_start();
-//if (!isset($_SESSION['user'])) {
-//    echo "not logged in";
-//} else {
-require_once "DataBaseConnection.php";
+session_start();
+if ($_SESSION['loggedIn'] == 1) {
+    require_once "DataBaseConnection.php";
 
-//Id of last comment 
-$comments = intval($_GET['lastID']);
-if(!$comments){
     $comments = 0;
-}
-//make quert for
-$sql = "SELECT senderName,commentText,commentTime,commentID FROM `Comments` where commentID>$comments;";
+    if (isset($_SESSION["lastComment"])) $comments = $_SESSION["lastComment"];
 
-//WHERE `timestamp` >= CURRENT_TIMESTAMP - INTERVAL 5 MINUTE
-$result = $con->query($sql);
+    $sql = "SELECT senderName,commentText,commentTime,commentID FROM `Comments` where commentID>$comments;";
+    $result = $con->query($sql);
 
-if (!$result) {
-    $message = "Whole query " . $sql;
-    echo $message;
-    die("Invalid query: " . mysqli_error($con));
+    if ($result) {
+        if ($result->num_rows > 0) {
+            $loc = false;
+            while ($Array = $result->fetch_assoc()) {
+                if ($loc) echo ";";
+                else $loc = true;
+                echo $Array["senderName"] . ',' . $Array["commentText"] . ',' . $Array["commentTime"] . ',' . $Array["commentID"];
+                if (intval($Array["commentID"]) > $_SESSION["lastComment"]) $_SESSION["lastComment"] = intval($Array["commentID"]);
+            }
+        } else echo "false";
+    } else echo "false";
 }
-$loc = false;
-while ($Array = $result->fetch_row()) {
-    if ($loc) echo ";";
-    else $loc = true;
-    echo $Array[0] . ',' . $Array[1] . ',' . $Array[2] . ',' . $Array[3];
-}
-//}

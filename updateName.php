@@ -5,9 +5,8 @@ if ($_SESSION['loggedIn'] == 1) {
     $jsondata = base64_decode($rawdata);
     $data = json_decode($jsondata, true);
     $usernamenew = base64_encode($data['NameNew']);
-    $avatar = $data['Avatar'];
 
-    $sql = "UPDATE `Users` SET `Name`=\"".$usernamenew."\",`avatar`=\"".$avatar."\" where Name=\"".$_SESSION['userName']."\"";
+    $sql = "UPDATE `Users` SET `Name`=\"".$usernamenew."\" where Name=\"".$_SESSION['userName']."\"";
     $result = $con->query($sql);
     if($result){
         $_SESSION['userName'] = $usernamenew;
