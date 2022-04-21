@@ -6,7 +6,7 @@ $jsondata = base64_decode($rawdata);
 $data = json_decode($jsondata, true);
 $username = base64_encode($data['Name']);
 $password = $data['Password'];
-$avatar = $data['Avatar'];
+$avatar = intval($data['Avatar']);
 
 $sql = "SELECT * FROM `Users` where Name=\"$username\";";
 $result = $con->query($sql);

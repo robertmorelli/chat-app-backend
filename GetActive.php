@@ -7,11 +7,13 @@ if ($_SESSION['loggedIn'] == 1) {
     $result = $con->query($sql);
 
     if ($result) {
-        $loc = false;
-        while ($Array = $result->fetch_row()) {
-            if ($loc) echo ";";
-            else $loc = true;
-            echo $Array[0] . ',' . $Array[1];
-        }
+        if ($result->num_rows > 0) {
+            $loc = false;
+            while ($Array = $result->fetch_row()) {
+                if ($loc) echo ";";
+                else $loc = true;
+                echo $Array[0] . ',' . $Array[1];
+            }
+        } else echo "false";
     } else echo "false";
 } else echo "false";
